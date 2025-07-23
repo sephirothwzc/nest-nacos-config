@@ -7,6 +7,7 @@ import {
 
 import { RootConfig } from './config/config.module';
 import { typedConfigLoadNacos } from './config/config.utils';
+import { EmitterUtils } from './config/emitter.utils';
 
 type ClassType<T = any> = {
   new (...args: any[]): T;
@@ -30,7 +31,12 @@ export type NacosConfigModuleOptions<T> = {
    * }
    */
   fileLoadOptions?: FileLoaderOptions | undefined;
-  onChange?: (json: Record<string, any>) => void;
+  /**
+   * nacos 订阅修改事件
+   * @param value
+   * @returns
+   */
+  onChange?: (value: RootConfig<T>) => void;
 };
 
 @Global()
@@ -56,6 +62,8 @@ export class NacosConfigModule {
         ],
       },
     );
+    // 绑定change 事件
+    options.onChange && EmitterUtils.onConfigUpdated(options.onChange);
     return ConfigModule;
   }
 }
