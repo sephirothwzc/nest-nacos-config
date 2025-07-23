@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
+
 import { ConfigUtils } from './config.utils';
 
 export class NacosOptionConfig {

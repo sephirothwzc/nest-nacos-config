@@ -6,7 +6,6 @@ import {
 } from 'nest-typed-config';
 
 import { RootConfig } from './config/config.module';
-import { NACOS_CONFIG_OPTIONS } from './nacos-config.constants';
 import { typedConfigLoadNacos } from './config/config.utils';
 
 type ClassType<T = any> = {
@@ -31,6 +30,7 @@ export type NacosConfigModuleOptions<T> = {
    * }
    */
   fileLoadOptions?: FileLoaderOptions | undefined;
+  onChange?: (json: Record<string, any>) => void;
 };
 
 @Global()
