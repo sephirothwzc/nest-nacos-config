@@ -1,0 +1,41 @@
+{
+  "name": "@your-org/nest-nacos-config",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --dts --format cjs",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^9.0.0 || ^10.0.0",
+    "@nestjs/core": "^9.0.0 || ^10.0.0"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.5",
+    "@nestjs/core": "^11.1.5",
+    "@nestjs/event-emitter": "^3.0.1",
+    "js-yaml": "^4.1.0",
+    "lodash-es": "^4.17.21",
+    "nacos": "2.6.0",
+    "nest-typed-config": "^2.10.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/lodash-es": "^4.17.12",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "eslint": "^9.31.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.3",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "prettier": "^3.6.2",
+    "tsup": "^7.0.0",
+    "typescript": "^5.3.3"
+  }
+}
