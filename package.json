@@ -1,5 +1,8 @@
 {
-  "name": "@your-org/nest-nacos-config",
+  "name": "wzc-nest-nacos-config",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

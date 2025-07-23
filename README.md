@@ -15,3 +15,5 @@ A NestJS module for loading configuration from Nacos.
 
   v2.6.0
   搭配 nacos v2
+
+## 安装使用
