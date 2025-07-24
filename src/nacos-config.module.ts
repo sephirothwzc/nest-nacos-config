@@ -1,69 +1,69 @@
-import { DynamicModule, Global, Module } from '@nestjs/common';
+// nacos-config.module.ts
+import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
+
+import { NACOS_CONFIG_OPTIONS } from './nacos-config.constants';
 import {
-  fileLoader,
-  FileLoaderOptions,
-  TypedConfigModule,
-} from 'nest-typed-config';
-
-import { RootConfig } from './config/config.module';
-import { typedConfigLoadNacos } from './config/config.utils';
-import { EmitterUtils } from './config/emitter.utils';
-
-type ClassType<T = any> = {
-  new (...args: any[]): T;
-};
-
-export type NacosSchemaClass<T> = ClassType<RootConfig<T>>;
-
-export type NacosConfigModuleOptions<T> = {
-  /**
-   * schema must have one validate
-   */
-  schema: NacosSchemaClass<T>;
-  /**
-   * default value
-   * {
-   *    basename: 'env', // 基础名称为 .env (匹配文件开头)
-   *    // searchPlaces: [
-   *    //    '.env.development.yaml', // 直接指定要加载的配置文件
-   *    // ],
-   *    searchFrom: 'conf', // 指定搜索路径为 conf 目录 (非常重要)
-   * }
-   */
-  fileLoadOptions?: FileLoaderOptions | undefined;
-  /**
-   * nacos 订阅修改事件
-   * @param value
-   * @returns
-   */
-  onChange?: (value: RootConfig<T>) => void;
-};
+  NacosConfigModuleAsyncOptions,
+  NacosConfigModuleOptions,
+} from './nacos-config.interface';
+import { createTypedConfigModule } from './nacos-config.loader';
 
 @Global()
 @Module({})
 export class NacosConfigModule {
-  static forRootAsync<T>(
-    options: NacosConfigModuleOptions<T>,
-  ): Promise<DynamicModule> {
-    const ConfigModule: Promise<DynamicModule> = TypedConfigModule.forRootAsync(
-      {
-        schema: options.schema,
-        load: [
-          fileLoader(
-            options.fileLoadOptions || {
-              basename: 'env', // 基础名称为 .env (匹配文件开头)
-              //  searchPlaces: [
-              //    '.env.development.yaml', // 直接指定要加载的配置文件
-              //  ],
-              searchFrom: 'conf', // 指定搜索路径为 conf 目录 (非常重要)
+  static forRootAsync<T = any>(
+    options: NacosConfigModuleAsyncOptions<T>,
+  ): DynamicModule {
+    const asyncOptionsProvider: Provider = {
+      provide: NACOS_CONFIG_OPTIONS,
+      useFactory: options.useFactory,
+      inject: options.inject || [],
+    };
+
+    // 一个承载 TypedConfigModule 的占位模块
+    @Module({})
+    class AsyncTypedConfigModule {
+      static async createAsyncModule(
+        options: NacosConfigModuleOptions<T>,
+      ): Promise<DynamicModule> {
+        return createTypedConfigModule(options);
+      }
+
+      static forRootAsync(): DynamicModule {
+        return {
+          module: AsyncTypedConfigModule,
+          imports: [],
+          providers: [
+            {
+              provide: 'ASYNC_TYPED_CONFIG_MODULE',
+              inject: [NACOS_CONFIG_OPTIONS],
+              useFactory: async (opts: NacosConfigModuleOptions<T>) => {
+                // 这里异步创建 TypedConfigModule
+                const typedModule =
+                  await AsyncTypedConfigModule.createAsyncModule(opts);
+
+                // 动态往 imports 中挂载 TypedConfigModule 的 providers、exports（Hack）
+                // 注意：这里操作“伪装”，实际是否有效依赖 Nest 实现细节
+                AsyncTypedConfigModule.forRootAsync().imports = [typedModule];
+                AsyncTypedConfigModule.forRootAsync().exports =
+                  typedModule.exports;
+                AsyncTypedConfigModule.forRootAsync().providers =
+                  typedModule.providers;
+
+                return typedModule;
+              },
             },
-          ),
-          typedConfigLoadNacos,
-        ],
-      },
-    );
-    // 绑定change 事件
-    options.onChange && EmitterUtils.onConfigUpdated(options.onChange);
-    return ConfigModule;
+          ],
+          exports: [],
+        };
+      }
+    }
+
+    return {
+      module: NacosConfigModule,
+      imports: [AsyncTypedConfigModule.forRootAsync()],
+      providers: [asyncOptionsProvider],
+      exports: [asyncOptionsProvider],
+    };
   }
 }

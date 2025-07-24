@@ -1,0 +1,1 @@
+export const NACOS_CONFIG_OPTIONS = Symbol('NACOS_CONFIG_OPTIONS');
