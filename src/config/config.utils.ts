@@ -3,7 +3,7 @@ import * as yaml from 'js-yaml';
 import { camelCase, get, isPlainObject } from 'lodash-es';
 import { NacosConfigClient } from 'nacos';
 
-import { RootConfig } from './config.module';
+import { RootConfig } from '../nacos-config.interface';
 import { EmitterUtils } from './emitter.utils';
 
 let configClient: NacosConfigClient;

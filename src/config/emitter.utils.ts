@@ -1,6 +1,6 @@
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
-import { RootConfig } from './config.module';
+import { RootConfig } from '../nacos-config.interface';
 
 // 自定义事件名
 const LOAD_CONFIG_END = 'loadConfigEnd';
