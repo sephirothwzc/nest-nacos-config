@@ -1,13 +1,22 @@
-import { Type } from '@nestjs/common';
+import { RootConfig } from './config/config.module';
 
-export interface NacosConfigModuleOptions<T = any> {
-  schema: Type<T>;
+type ClassType<T = any> = {
+  new (...args: any[]): T;
+};
+
+export type NacosSchemaClass<T> = ClassType<RootConfig<T>>;
+
+export type NacosConfigModuleOptions<T> = {
+  /**
+   * schema must have one validate
+   */
+  schema: NacosSchemaClass<T>;
   fileLoadOptions?: {
     basename?: string;
     searchFrom?: string;
   };
   onChange?: () => void;
-}
+};
 
 export interface NacosConfigModuleAsyncOptions<T = any> {
   useFactory: (
