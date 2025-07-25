@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -23,13 +23,13 @@
     "@nestjs/core": "^11.1.5",
     "@nestjs/event-emitter": "^3.0.1",
     "js-yaml": "^4.1.0",
-    "lodash-es": "^4.17.21",
+    "lodash": "^4.17.21",
     "nacos": "2.6.0",
     "nest-typed-config": "^2.10.1"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
-    "@types/lodash-es": "^4.17.12",
+    "@types/lodash": "^4.17.20",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "@typescript-eslint/parser": "^8.38.0",
     "eslint": "^9.31.0",

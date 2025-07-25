@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import * as yaml from 'js-yaml';
-import { camelCase, get, isPlainObject } from 'lodash-es';
+import { camelCase, get, isPlainObject } from 'lodash';
 import { NacosConfigClient } from 'nacos';
 
 import { RootConfig } from '../nacos-config.interface';
