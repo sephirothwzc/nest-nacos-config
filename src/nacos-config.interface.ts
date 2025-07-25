@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { FileLoaderOptions } from 'nest-typed-config';
 
 import { ConfigUtils } from './config/config.utils';
 
@@ -52,10 +53,7 @@ export type NacosConfigModuleOptions<T> = {
    * schema must have one validate
    */
   schema: NacosSchemaClass<T>;
-  fileLoadOptions?: {
-    basename?: string;
-    searchFrom?: string;
-  };
+  fileLoadOptions?: FileLoaderOptions;
   onChange?: () => void;
 };
 

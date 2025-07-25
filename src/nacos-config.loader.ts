@@ -1,5 +1,9 @@
 import { DynamicModule } from '@nestjs/common';
-import { fileLoader, TypedConfigModule } from 'nest-typed-config';
+import {
+  fileLoader,
+  FileLoaderOptions,
+  TypedConfigModule,
+} from 'nest-typed-config';
 
 import { typedConfigLoadNacos } from './config/config.utils';
 import { EmitterUtils } from './config/emitter.utils'; // 你已有的 onChange 工具
@@ -12,10 +16,11 @@ export async function createTypedConfigModule<T>(
     schema: options.schema,
     load: [
       fileLoader(
-        options.fileLoadOptions || {
-          basename: 'env',
-          searchFrom: 'conf',
-        },
+        options.fileLoadOptions ||
+          ({
+            basename: 'env',
+            searchFrom: 'conf',
+          } as FileLoaderOptions),
       ),
       typedConfigLoadNacos,
     ],
